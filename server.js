@@ -12,63 +12,63 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, 'public'));
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/auth', (req, res) => {
-    res.sendFile(path.join(__dirname, 'auth.html'));
+    res.sendFile(path.join(__dirname, 'public', 'auth.html'));
 });
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 app.get('/grammar_checker', (req, res) => {
-    res.sendFile(path.join(__dirname, 'grammar_checker.html'));
+    res.sendFile(path.join(__dirname, 'public', 'grammar_checker.html'));
 });
 
 app.get('/payment-success', (req, res) => {
-    res.sendFile(path.join(__dirname, 'payment-success.html'));
+    res.sendFile(path.join(__dirname, 'public', 'payment-success.html'));
 });
 
 app.get('/payment-failed', (req, res) => {
-    res.sendFile(path.join(__dirname, 'payment-failed.html'));
+    res.sendFile(path.join(__dirname, 'public', 'payment-failed.html'));
 });
 
 app.get('/terms', (req, res) => {
-    res.sendFile(path.join(__dirname, 'terms.html'));
+    res.sendFile(path.join(__dirname, 'public', 'terms.html'));
 });
 
 app.get('/translator', (req, res) => {
-    res.sendFile(path.join(__dirname, 'translator.html'));
+    res.sendFile(path.join(__dirname, 'public', 'translator.html'));
 });
 
 app.get('/speaking_naskah', (req, res) => {
-    res.sendFile(path.join(__dirname, 'speaking_naskah.html'));
+    res.sendFile(path.join(__dirname, 'public', 'speaking_naskah.html'));
 });
 
 app.get('/listening', (req, res) => {
-    res.sendFile(path.join(__dirname, 'listening.html'));
+    res.sendFile(path.join(__dirname, 'public', 'listening.html'));
 });
 
 app.get('/withdrawal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'withdrawal.html'));
+    res.sendFile(path.join(__dirname, 'public', 'withdrawal.html'));
 });
 
 app.get('/affiliate', (req, res) => {
-    res.sendFile(path.join(__dirname, 'affiliate.html'));
+    res.sendFile(path.join(__dirname, 'public', 'affiliate.html'));
 });
 
 app.get('/community', (req, res) => {
-    res.sendFile(path.join(__dirname, 'community.html'));
+    res.sendFile(path.join(__dirname, 'public', 'community.html'));
 });
 
 app.get('/game', (req, res) => {
-    res.sendFile(path.join(__dirname, 'game.html'));
+    res.sendFile(path.join(__dirname, 'public', 'game.html'));
 });
 
 const supabaseUrl = 'https://sbnzxduuaimpyfoxoaft.supabase.co';
