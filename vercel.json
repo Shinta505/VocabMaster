@@ -1,16 +1,4 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    { "src": "/javascript/(.*)", "dest": "/javascript/$1" },
-    { "src": "/style.css", "dest": "/style.css" },
-    { "src": "/(.*\\.(css|js|png|jpg|jpeg|svg|ico))", "dest": "/$1" },
-    { "src": "/(.*)", "dest": "server.js" }
-  ]
+  "cleanUrls": true
 }
