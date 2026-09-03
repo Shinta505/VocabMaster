@@ -958,7 +958,9 @@ app.get('/api/profile/:userId', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server Midtrans berjalan di port ${PORT}`);
-});
+module.exports = app;
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//     console.log(`Server Midtrans berjalan di port ${PORT}`);
+// });
