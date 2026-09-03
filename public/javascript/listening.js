@@ -1,5 +1,147 @@
-const dropdown = document.getElementById('mobileDropdown');
-dropdown.classList.toggle('hidden');
+const supabaseUrl = 'https://sbnzxduuaimpyfoxoaft.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNibnp4ZHV1YWltcHlmb3hvYWZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjU0MTAsImV4cCI6MjEwMjcwMTQxMH0.YetlOf6hjNBiHVZFPRpXaAzjcVrdawLM3VIYEv18yR0';
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+let currentUser = null;
+let isProUser = false;
+let userAiVocabQuota = 8;
+
+let player;
+let isLocalMode = false;
+let sentences = [];
+let currentIndex = 0;
+let playInterval = null;
+let playAnimationId = null;
+
+let currentAudio = null;
+const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+const wrongSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2954/2954-preview.mp3');
+
+// Cek Sesi Login & Status User saat halaman dibuka
+window.addEventListener('DOMContentLoaded', async() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    let refCode = urlParams.get('ref');
+
+    if (refCode) {
+        localStorage.setItem('vocab_ref_code', refCode);
+    } else {
+        refCode = localStorage.getItem('vocab_ref_code');
+    }
+
+    if (refCode && refCode !== 'NONE') {
+        // Menyisipkan ?ref= otomatis ke seluruh menu navigasi/sidebar agar tidak terputus
+        document.querySelectorAll('a[href]').forEach(link => {
+            let href = link.getAttribute('href');
+            if (href && href.startsWith('/') && !href.startsWith('//')) {
+                const url = new URL(href, window.location.origin);
+                url.searchParams.set('ref', refCode);
+                link.setAttribute('href', url.pathname + url.search);
+            }
+        });
+    }
+
+    // --- 1. INISIALISASI MIDTRANS ---
+    try {
+        const res = await fetch('/api/config');
+        const data = await res.json();
+        if (data.clientKey) {
+            const script = document.createElement('script');
+            script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+            script.setAttribute('data-client-key', data.clientKey);
+            document.head.appendChild(script);
+        }
+    } catch (err) {
+        console.log("Gagal memuat config Midtrans.");
+    }
+
+    // KODE PENGGANTI DENGAN PENGECEKAN EMAIL VERIFIKASI
+    supabaseClient.auth.onAuthStateChange(async function(event, session) {
+        if (!session) {
+            window.location.href = '/auth'; // Mengarah ke /auth
+            return;
+        }
+
+        // Pengecekan verifikasi email
+        if (session.user && !session.user.email_confirmed_at) {
+            alert("Harap verifikasi email Anda terlebih dahulu. Silakan cek kotak masuk email Anda.");
+            await supabaseClient.auth.signOut();
+            window.location.href = '/auth';
+            return;
+        }
+
+        currentUser = session.user;
+        const defaultName = currentUser.email.split('@')[0].toUpperCase();
+        document.getElementById('displayUsername').textContent = defaultName;
+
+        // Load profil untuk mengecek status PRO dan kuota
+        const { data: profile } = await supabaseClient
+            .from('profiles')
+            .select('username, pro_expired_at, dob, ai_vocab_quota') // Tambahkan ai_vocab_quota
+            .eq('id', currentUser.id)
+            .maybeSingle();
+
+        if (profile) {
+            if (profile.username) {
+                document.getElementById('displayUsername').textContent = profile.username.toUpperCase();
+            }
+
+            // Set kuota AI
+            userAiVocabQuota = profile.ai_vocab_quota || 8;
+
+            if (profile.pro_expired_at && new Date(profile.pro_expired_at) > new Date()) {
+                isProUser = true;
+            } else {
+                isProUser = false;
+            }
+
+            // Sinkronisasi Tampilan Elemen PRO / Free
+            const upgradeBtn = document.getElementById('upgradeProBtn');
+            const desktopUpgradeCard = document.getElementById('desktopUpgradeCardContainer');
+            const desktopAffiliateBtn = document.getElementById('desktopAffiliateBtn');
+            const mobileAffiliateBtn = document.getElementById('mobileAffiliateBtn');
+            const logoBadge = document.getElementById('logoStatusBadge');
+
+            if (isProUser) {
+                if (upgradeBtn) upgradeBtn.classList.add('hidden');
+                if (desktopUpgradeCard) desktopUpgradeCard.classList.add('hidden');
+                if (desktopAffiliateBtn) desktopAffiliateBtn.classList.replace('hidden', 'flex');
+                if (mobileAffiliateBtn) mobileAffiliateBtn.classList.replace('hidden', 'flex');
+                if (logoBadge) {
+                    logoBadge.textContent = 'Pro';
+                    logoBadge.className = 'text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold align-middle';
+                }
+            } else {
+                if (upgradeBtn) upgradeBtn.classList.replace('hidden', 'flex');
+                if (desktopUpgradeCard) desktopUpgradeCard.classList.remove('hidden');
+                if (desktopAffiliateBtn) desktopAffiliateBtn.classList.replace('flex', 'hidden');
+                if (mobileAffiliateBtn) mobileAffiliateBtn.classList.replace('flex', 'hidden');
+                if (logoBadge) {
+                    logoBadge.textContent = 'Free';
+                    logoBadge.className = 'text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full font-bold align-middle';
+                }
+
+                // Tampilkan Overlay Form Tahap 1 jika Free
+                const overlay = document.getElementById('proOverlay');
+                if (overlay) {
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                }
+            }
+        }
+        loadGallery();
+    });
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+    await supabaseClient.auth.signOut();
+    window.location.href = '/auth';
+});
+
+// Toggle dropdown menu titik tiga / mobile menu
+function toggleMobileMenu() {
+    const dropdown = document.getElementById('mobileDropdown');
+    dropdown.classList.toggle('hidden');
+}
 
 window.addEventListener('click', function(e) {
     const dropdown = document.getElementById('mobileDropdown');
