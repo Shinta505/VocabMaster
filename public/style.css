@@ -1,0 +1,194 @@
+/* =========================================
+   Impor Tipografi Eksternal (API Font)
+   ========================================= */
+/* Superset font keluarga Inter dan Nunito untuk mengakomodasi seluruh modul antarmuka */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap');
+
+/* =========================================
+   Gaya Dasar (Base Styles) & Modifikator State
+   ========================================= */
+/* Default untuk index, grammar_checker, dashboard, translator, dll */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    overflow-x: hidden;
+}
+
+/* Modifikator untuk antarmuka Autentikasi (auth.html) */
+body.auth-page {
+    background-color: #eef2ff;
+}
+
+/* Modifikator untuk antarmuka Permainan (game.html) */
+body.game-page {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f0f9ff;
+    overscroll-behavior-y: none;
+}
+
+/* Modifikator khusus untuk antarmuka Affiliate, Community, Listening, dan Speaking Naskah */
+body.affiliate-page,
+body.community-page,
+body.listening-page,
+body.speaking-page {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+/* =========================================
+   Kustomisasi Scrollbar (Webkit Pseudo-elements)
+   ========================================= */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Track diatur menjadi transparent untuk menyesuaikan gaya translator yang lebih bersih */
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Utilitas untuk menyembunyikan scrollbar tanpa memengaruhi fungsionalitas scroll */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* =========================================
+   Komponen Antarmuka Global (UI Components)
+   ========================================= */
+.modal-bg {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.tab-scroll-wrapper {
+    position: relative;
+}
+
+.tab-scroll-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.95));
+    height: 100%;
+    pointer-events: none;
+}
+
+.tab-active {
+    border-bottom-width: 2px;
+    border-color: #3b82f6;
+    color: #3b82f6 !important;
+    font-weight: 600;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.hero-glow {
+    background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(255,255,255,0) 70%);
+}
+
+/* =========================================
+   Transformasi 3D (Implementasi Game & UI)
+   ========================================= */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.transform-style-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* =========================================
+   Animasi Kustom (Game Mechanics & Interaktivitas)
+   ========================================= */
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(0); opacity: 0; }
+}
+.animate-pop { 
+    animation: pop 0.3s ease-out forwards; 
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+.animate-shake { 
+    animation: shake 0.4s ease-in-out; 
+}
+
+/* Komponen Spesifik Modul Permainan */
+.falling-object {
+    position: absolute;
+    transition: top 0.1s linear;
+}
+
+.key-btn {
+    transition: all 0.1s;
+}
+
+.key-btn:active { 
+    transform: scale(0.9); 
+}
+
+/* =========================================
+   Manipulasi Document Object Model (Vocabulary Module)
+   ========================================= */
+#addVocabModalToggle:checked ~ .add-vocab-overlay {
+    display: flex;
+}
+
+#vocabListContainer table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#vocabListContainer thead th {
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+    color: #64748b;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+#vocabListContainer tbody tr {
+    transition: all 0.2s;
+}
+
+#vocabListContainer tbody td {
+    border-bottom: 1px solid #f8fafc;
+    padding: 16px 8px;
+}

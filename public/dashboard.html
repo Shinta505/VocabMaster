@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VocabMaster</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://snap-assets.sandbox.midtrans.com https://api.sandbox.midtrans.com https://snap-assets.midtrans.com https://app.sandbox.midtrans.com https://api.midtrans.com https://app.midtrans.com https://pay.google.com https://gwk.gopayapi.com https://www.googletagmanager.com https://o.alicdn.com https://g.alicdn.com;">
+    <link rel="icon" type="image/png" href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Updated background color to match design */
+            color: #1e293b;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .tab-scroll-wrapper {
+            position: relative;
+        }
+        .tab-scroll-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.95));
+            pointer-events: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-active {
+            border-bottom-width: 2px;
+            border-color: #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 600;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Hack CSS untuk Form Tambah Vocab tanpa merubah JS */
+        #addVocabModalToggle:checked ~ .add-vocab-overlay {
+            display: flex;
+        }
+
+        /* Penyesuaian Tabel hasil JS agar mirip Card List */
+        #vocabListContainer table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        #vocabListContainer thead th {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+            color: #64748b;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        #vocabListContainer tbody tr {
+            transition: all 0.2s;
+        }
+        #vocabListContainer tbody td {
+            border-bottom: 1px solid #f8fafc;
+            padding: 16px 8px;
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- KUMPULAN MODAL -->
+    <!-- Modal Contact Us -->
+    <div id="contactModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeContactModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+
+            <!-- Form Kritik & Saran -->
+            <div class="space-y-2 bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-5 rounded-2xl shadow-sm mb-6 mt-2">
+                <div>
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Kritik & Saran (Anonim)
+                    </h3>
+                    <form action="https://formsubmit.co/shinta.nur119@gmail.com" method="POST" class="flex flex-col gap-3">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://vocab-app-one-eosin.vercel.app/dashboard">
+                        <input type="text" name="Pesan_Kritik" required placeholder="Tulis masukan untuk kami..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white px-4 py-3 rounded-xl text-sm font-bold transition-colors shadow-md flex justify-center items-center gap-2">
+                            Kirim Masukan <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="space-y-3 flex items-center gap-4 mb-5 px-2">
+                <div class="bg-blue-100 text-blue-600 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Hubungi Kami</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Punya pertanyaan atau kendala?</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-sm text-gray-600 mb-6">
+                <div class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 transition-colors rounded-2xl border border-gray-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fa-brands fa-whatsapp text-xl"></i></div>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium uppercase tracking-wider mb-0.5">WhatsApp</span>
+                        <span class="font-bold text-gray-800">+62 812-3456-789</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 transition-colors rounded-2xl border border-gray-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-500"><i class="fa-solid fa-envelope text-lg"></i></div>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium uppercase tracking-wider mb-0.5">Email</span>
+                        <span class="font-bold text-gray-800">vocab@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Vocab Premium -->
+    <div id="vocabDetailModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-0 relative shadow-2xl max-h-[90vh] flex flex-col overflow-hidden border border-white/20">
+            <!-- Header Modal -->
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white shrink-0 relative">
+                <button onclick="closeVocabDetail()" class="absolute top-4 right-4 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 w-8 h-8 rounded-full flex items-center justify-center transition-all"><i class="fa-solid fa-times"></i></button>
+
+                <div class="flex items-center gap-4 mb-3">
+                    <h2 id="modalWord" class="text-4xl font-black tracking-tight"></h2>
+                    <button onclick="speakText(document.getElementById('modalWord').textContent)" class="bg-white/20 text-white w-10 h-10 rounded-full hover:bg-white/30 transition-all flex items-center justify-center shadow-sm backdrop-blur-sm" title="Dengarkan Pengucapan">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap mt-2">
+                    <span id="modalLevel" class="px-3 py-1 bg-yellow-400 text-yellow-900 text-xs font-black rounded-lg uppercase tracking-widest shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-signal"></i> B2</span>
+                    <span id="modalType" class="px-3 py-1 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-bold rounded-lg uppercase tracking-wider"></span>
+                </div>
+            </div>
+
+            <!-- Body Modal (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8 bg-gray-50 space-y-6 hide-scrollbar">
+                <!-- Arti & Makna -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Arti Bahasa Indonesia</span>
+                    <p id="modalMeaning" class="text-xl font-bold text-gray-800 mb-4"></p>
+                    <div class="border-t border-gray-100 pt-3 mt-1">
+                        <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block mb-1.5">English Definition (Makna)</span>
+                        <p id="modalDefinition" class="text-sm font-medium text-gray-600 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- Bagian V1, V2, V3, V-ing (Khusus Verb) -->
+                <div id="verbFormsSection" class="hidden p-5 bg-emerald-50 rounded-2xl border border-emerald-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 text-emerald-200 opacity-30 text-4xl"><i class="fa-solid fa-shapes"></i></div>
+                    <span class="text-xs text-emerald-700 font-bold uppercase tracking-wider block mb-4 relative z-10">Perubahan Kata Kerja</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs relative z-10">
+                        <div class="bg-white p-3 rounded-xl border border-emerald-100 text-center shadow-sm">
+                            <span class="text-gray-400 block font-medium mb-1 text-[10px] uppercase tracking-wider">V1 (Base)</span>
+                            <span id="verbV1" class="font-bold text-emerald-900 text-sm">-</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-100 text-center shadow-sm">
+                            <span class="text-gray-400 block font-medium mb-1 text-[10px] uppercase tracking-wider">V2 (Past)</span>
+                            <span id="verbV2" class="font-bold text-emerald-900 text-sm">-</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-100 text-center shadow-sm">
+                            <span class="text-gray-400 block font-medium mb-1 text-[10px] uppercase tracking-wider">V3 (Part)</span>
+                            <span id="verbV3" class="font-bold text-emerald-900 text-sm">-</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-100 text-center shadow-sm">
+                            <span class="text-gray-400 block font-medium mb-1 text-[10px] uppercase tracking-wider">V-ing</span>
+                            <span id="verbVing" class="font-bold text-emerald-900 text-sm">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid Sinonim & Keluarga Kata -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider block mb-3 flex items-center gap-1.5"><i class="fa-solid fa-equals"></i> Sinonim</span>
+                        <div id="modalSynonyms" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <span class="text-[10px] font-bold text-purple-500 uppercase tracking-wider block mb-3 flex items-center gap-1.5"><i class="fa-solid fa-sitemap"></i> Word Family</span>
+                        <div id="modalWordFamily" class="space-y-2 text-sm"></div>
+                    </div>
+                </div>
+
+                <!-- Contoh Kalimat -->
+                <div>
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-3 flex items-center gap-1.5"><i class="fa-solid fa-list-ol"></i> Contoh Penggunaan</span>
+                    <div id="modalContextList" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Materi Premium -->
+    <div id="premiumModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl max-h-[90vh] flex flex-col">
+            <button onclick="closePremiumModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+
+            <div class="flex items-center gap-4 mb-6 mt-2 px-2">
+                <div class="bg-gradient-to-br from-amber-400 to-orange-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-orange-500/30">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black text-gray-800">Materi Premium</h2>
+                    <p class="text-xs text-gray-500 mt-0.5 font-medium">Akses modul PDF eksklusif Anda.</p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-3 pr-1 hide-scrollbar">
+                <a href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/oxford3000.pdf" target="_blank" class="w-full flex items-center justify-between bg-white hover:bg-orange-50 p-4 rounded-2xl border border-gray-200 hover:border-orange-300 transition-all group cursor-pointer shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-file-pdf text-lg"></i></div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-800 block group-hover:text-orange-600 transition-colors">3000 Oxford Vocab A1-B2</span>
+                            <span class="text-[11px] font-medium text-gray-400">PDF • Kosakata Tingkat A1-B2</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 text-sm"></i>
+                </a>
+                <a href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/oxford5000.pdf" target="_blank" class="w-full flex items-center justify-between bg-white hover:bg-orange-50 p-4 rounded-2xl border border-gray-200 hover:border-orange-300 transition-all group cursor-pointer shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-file-pdf text-lg"></i></div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-800 block group-hover:text-orange-600 transition-colors">5000 Oxford Vocab B2-C1</span>
+                            <span class="text-[11px] font-medium text-gray-400">PDF • Kosakata Tingkat B2-C1</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 text-sm"></i>
+                </a>
+                <a href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/Ringkasan_English_Grammar.pdf" target="_blank" class="w-full flex items-center justify-between bg-white hover:bg-orange-50 p-4 rounded-2xl border border-gray-200 hover:border-orange-300 transition-all group cursor-pointer shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-file-pdf text-lg"></i></div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-800 block group-hover:text-orange-600 transition-colors">Ringkasan Grammar</span>
+                            <span class="text-[11px] font-medium text-gray-400">PDF • Tata Bahasa Lengkap</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 text-sm"></i>
+                </a>
+                <a href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/tutorialbelajar.pdf" target="_blank" class="w-full flex items-center justify-between bg-white hover:bg-orange-50 p-4 rounded-2xl border border-gray-200 hover:border-orange-300 transition-all group cursor-pointer shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-file-pdf text-lg"></i></div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-800 block group-hover:text-orange-600 transition-colors">Tutorial Belajar Efektif</span>
+                            <span class="text-[11px] font-medium text-gray-400">PDF • Strategi Belajar</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export PDF Modal -->
+    <div id="exportPdfModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-lg relative max-h-[90vh] flex flex-col">
+            <button type="button" onclick="closeExportModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+            
+            <div class="flex items-center gap-3 mb-5 mt-2">
+                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-file-pdf"></i></div>
+                <h2 class="text-xl font-bold text-gray-800">Export PDF</h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Filter Jenis Kata</label>
+                    <select id="exportCategoryFilter" onchange="renderExportList()" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                        <option value="all">Semua Jenis Kata</option>
+                        <option value="Noun">Noun (Benda)</option>
+                        <option value="Verb">Verb (Kerja)</option>
+                        <option value="Adjective">Adjective (Sifat)</option>
+                        <option value="Adverb">Adverb (Keterangan)</option>
+                        <option value="Pronoun">Pronoun (Ganti)</option>
+                        <option value="Preposition">Preposition (Depan)</option>
+                        <option value="Conjunction">Conjunction (Hubung)</option>
+                        <option value="Determiner">Determiner (Penentu)</option>
+                        <option value="Interjection">Interjection (Seruan)</option>
+                        <option value="Phrase">Phrase (Frasa)</option>
+                        <option value="Idiom">Idiom (Ungkapan)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Urutkan</label>
+                    <select id="exportSort" onchange="renderExportList()" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                        <option value="date-desc">Terbaru</option>
+                        <option value="date-asc">Terlama</option>
+                        <option value="alpha-asc">A - Z</option>
+                        <option value="alpha-desc">Z - A</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-xs font-bold text-gray-700">Pilih Kosakata:</span>
+                <button type="button" onclick="toggleSelectAllExport()" id="btnSelectAllExport" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded">Batal Pilih Semua</button>
+            </div>
+
+            <div id="exportVocabList" class="flex-1 overflow-y-auto border border-gray-200 rounded-xl p-2 space-y-1 mb-5 bg-gray-50 min-h-[200px] hide-scrollbar"></div>
+
+            <button type="button" onclick="generatePDF()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors shadow-md shadow-red-500/20 flex items-center justify-center gap-2">
+                Unduh File PDF <i class="fa-solid fa-download"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Flashcard Modal -->
+    <div id="flashcardModal" class="fixed inset-0 bg-slate-900/95 flex items-center justify-center z-[60] hidden p-4 backdrop-blur-md">
+        <div class="w-full max-w-sm relative flex flex-col h-[80vh] max-h-[600px]">
+            <div class="flex justify-between items-center text-white mb-6">
+                <h2 class="font-bold flex items-center gap-2 text-lg"><div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400"><i class="fa-solid fa-layer-group"></i></div> Mode Latihan</h2>
+                <div class="flex items-center gap-3">
+                    <span id="fcCounter" class="text-xs bg-white/10 px-3 py-1.5 rounded-full font-bold tracking-wider backdrop-blur-sm border border-white/10">1 / 10</span>
+                    <button onclick="closeFlashcard()" class="hover:text-red-400 transition-colors w-8 h-8 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10"><i class="fa-solid fa-times text-sm"></i></button>
+                </div>
+            </div>
+
+            <div class="flex-1 w-full relative perspective-1000">
+                <div id="fcCard" class="w-full h-full relative transition-transform duration-500 transform-style-3d shadow-2xl rounded-[2rem] cursor-pointer" onclick="flipFlashcard()">
+                    <!-- Front -->
+                    <div id="fcFront" class="absolute inset-0 backface-hidden flex flex-col items-center justify-center bg-white rounded-[2rem] p-8 border-4 border-blue-50">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-6 absolute top-8 flex items-center gap-1.5"><i class="fa-solid fa-hand-pointer"></i> Tap Kartu Untuk Membalik</span>
+                        <h3 id="fcWord" class="text-5xl font-black text-gray-800 mb-8 text-center tracking-tight">Word</h3>
+                        <button onclick="event.stopPropagation(); speakText(document.getElementById('fcWord').textContent)" class="bg-blue-50 text-blue-600 w-16 h-16 rounded-full hover:bg-blue-100 transition-all shadow-md flex items-center justify-center">
+                            <i class="fa-solid fa-volume-high text-2xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Back -->
+                    <div id="fcBack" class="absolute inset-0 backface-hidden flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-8 rotate-y-180 text-white shadow-inner">
+                        <span id="fcType" class="px-4 py-1.5 bg-white/20 text-white text-[10px] font-bold rounded-full mb-4 uppercase tracking-wider backdrop-blur-sm border border-white/20">Verb</span>
+                        <h3 id="fcMeaning" class="text-3xl font-black mb-6 text-center">Arti Kata</h3>
+                        <div class="w-full bg-black/20 p-5 rounded-2xl text-sm text-blue-50 text-left overflow-y-auto max-h-48 hide-scrollbar backdrop-blur-sm border border-white/10">
+                            <span class="text-[10px] font-bold text-blue-200 uppercase tracking-wider block mb-3 opacity-80">Contoh Penggunaan:</span>
+                            <div id="fcContext" class="space-y-3 font-medium"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-between gap-4 h-14">
+                <button id="fcBtnHafal" onclick="markFlashcardMemorized()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl transition-all items-center justify-center gap-2 hidden shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-check-circle"></i> Sudah Hafal
+                </button>
+                <button id="fcBtnNext" onclick="nextFlashcard()" class="flex-1 bg-white hover:bg-gray-50 text-blue-600 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg">
+                    Lanjut <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Profil -->
+    <div id="profileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="document.getElementById('profileModal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+            
+            <div class="flex items-center gap-3 mb-6 mt-2">
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-user-pen"></i></div>
+                <h2 class="text-xl font-bold text-gray-800">Edit Profil</h2>
+            </div>
+
+            <form id="profileForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Pengguna (Unik)</label>
+                    <input type="text" id="profileUsername" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="NamaUnikAnda">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email</label>
+                    <input type="email" id="profileEmail" disabled class="w-full px-4 py-3 border border-gray-200 bg-gray-100 rounded-xl text-sm text-gray-500 font-medium cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tanggal Lahir</label>
+                    <input type="date" id="profileDob" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-gray-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password Baru</label>
+                    <input type="password" id="profilePassword" minlength="8" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="Kosongkan jika tidak diubah">
+                </div>
+                <div id="profileStatusMsg" class="hidden text-sm p-3 rounded-xl border font-medium"></div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 mt-2">Simpan Profil</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- NEW MAIN UI LAYOUT TO MATCH THE SCREENSHOT -->
+    <!-- ========================================== -->
+    <div id="appScreen" class="flex-1 h-screen overflow-hidden bg-[#f8fafc]">
+        
+        <!-- SIDEBAR (DESKTOP) -->
+        <aside class="hidden lg:flex flex-col w-[260px] bg-white border-r border-gray-100 h-full fixed left-0 top-0 z-40">
+            <!-- Logo Area -->
+            <div class="h-20 flex items-center px-6 border-b border-gray-50">
+                <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-8 h-8 object-contain">
+                <h1 class="text-[17px] font-black text-gray-800 ml-3 tracking-tight">VocabMaster <span id="logoStatusBadge" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold align-middle">Free</span></h1>
+            </div>
+
+            <!-- Nav Menu (Visual/Mock for UI accuracy) -->
+            <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-house w-5 text-center"></i> Beranda
+                </a>
+                <a href="/grammar_checker" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker
+                </a>
+                <a href="/community" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas
+                </a>
+                <a href="/translator" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN
+                </a>
+                <a href="/speaking_naskah" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice
+                </a>
+                <a href="/listening" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice
+                </a>
+                <a href="/affiliate" id="desktopAffiliateBtn" class="hidden items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi
+                </a>
+                <a href="#" onclick="openContactModal()" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us
+                </a>
+            </div>
+
+            <!-- Upgrade Card -->
+            <div id="desktopUpgradeCardContainer" class="p-4 mb-4">
+                <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-crown text-yellow-500 text-lg"></i>
+                        <h4 class="font-bold text-sm text-gray-800">Upgrade ke Premium</h4>
+                    </div>
+                    <ul class="text-xs text-gray-500 space-y-2 mb-4 font-medium">
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Akses semua materi</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Tanpa iklan</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Fitur premium lainnya</li>
+                    </ul>
+                    <button onclick="openUpgradeModal()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">
+                        Upgrade Sekarang
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT COLUMN -->
+        <main class="flex-1 flex flex-col h-full lg:ml-[260px] relative">
+            
+            <!-- Message Box Absolute -->
+            <div id="messageBox" class="hidden absolute top-20 right-4 lg:top-4 lg:right-8 px-4 py-3 rounded-xl z-50 flex items-center gap-3 shadow-lg font-medium" role="alert">
+                <i></i><span id="messageBoxText" class="text-sm"></span>
+            </div>
+
+            <!-- TOP HEADER (Mobile & Desktop) -->
+            <header class="h-16 lg:h-20 bg-[#f8fafc] flex items-center justify-between px-4 lg:px-8 shrink-0 z-30">
+                <!-- Mobile Left -->
+                <div class="flex items-center gap-3 lg:hidden">
+                    <button onclick="toggleMobileMenu()" id="mobileMenuBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 shadow-sm shrink-0">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-7 h-7 object-contain shrink-0">
+                    <h1 class="hidden sm:block text-lg font-black text-gray-800 tracking-tight truncate">VocabMaster</h1>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-2 sm:gap-3 ml-auto lg:gap-4">
+                    <button id="upgradeProBtn" onclick="openUpgradeModal()" class="flex bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-sm items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity shrink-0">
+                        <i class="fa-solid fa-crown text-yellow-300"></i> Upgrade PRO
+                    </button>
+                    <button onclick="openProfileModal()" class="flex items-center gap-2 text-sm font-semibold text-gray-700 bg-white pl-2 pr-3 py-1.5 rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors shrink-0">
+                        <div class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-user"></i></div>
+                        <span id="displayUsername" class="hidden sm:block">User</span> <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 ml-1 hidden sm:block"></i>
+                    </button>
+                    <button id="logoutBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm transition-colors shrink-0" title="Logout">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Dropdown -->
+                <div id="mobileDropdown" class="hidden absolute top-16 left-4 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                    <button onclick="window.location.href='#'" class="w-full text-left px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 flex items-center gap-3"><i class="fa-solid fa-house w-5 text-center"></i> Beranda</button>
+                    <button onclick="window.location.href='/grammar_checker.html'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker</button>
+                    <button onclick="window.location.href='/community'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas</button>
+                    <button onclick="window.location.href='/translator'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN</button>
+                    <button onclick="window.location.href='/speaking_naskah'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice</button>
+                    <button onclick="window.location.href='/listening'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice</button>
+                    <button id="mobileAffiliateBtn" onclick="window.location.href='/affiliate'" class="hidden w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 items-center gap-3"><i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi</button>
+                    <button onclick="openContactModal(); toggleMobileMenu();" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3 border-t border-gray-100 mt-1 pt-2"><i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us</button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE DASHBOARD CONTENT -->
+            <div class="flex-1 overflow-y-auto px-4 lg:px-8 pb-8 hide-scrollbar">
+                
+                <!-- Welcome Section -->
+                <div class="bg-white rounded-[2rem] p-6 lg:p-8 flex flex-col lg:flex-row justify-between items-start lg:items-center shadow-sm border border-gray-100 relative overflow-hidden mb-6 lg:mb-8">
+                    <!-- Decor graphic (visual only) -->
+                    <div class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-blue-50 to-transparent hidden md:block"></div>
+                    
+                    <div class="relative z-10">
+                        <h2 class="text-2xl lg:text-3xl font-black text-gray-900 flex items-center gap-2">Hai, <span id="welcomeName">User</span>! <span class="text-2xl">👋</span></h2>
+                        <p class="text-sm font-medium text-gray-500 mt-2">Belajar kosakata setiap hari, tingkatkan kemampuan bahasamu!</p>
+                    </div>
+
+                    <div class="flex flex-row gap-6 lg:gap-8 mt-6 lg:mt-0 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 lg:w-12 lg:h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 text-lg lg:text-xl shrink-0"><i class="fa-solid fa-fire"></i></div>
+                            <div>
+                                <div id="statStreak" class="font-black text-lg lg:text-xl text-gray-900 leading-none">0</div>
+                                <div class="text-[9px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-wider">Streak Hari Ini</div>
+                            </div>
+                        </div>
+                        <div class="w-px h-10 bg-gray-200 self-center hidden lg:block"></div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 lg:w-12 lg:h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 text-lg lg:text-xl shrink-0"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div>
+                                <div id="statMemorized" class="font-black text-lg lg:text-xl text-gray-900 leading-none">0</div>
+                                <div class="text-[9px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-wider">Kata Dihafal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Stats Cards Grid -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 hover:border-blue-200 transition-colors cursor-pointer">
+                        <div class="w-10 h-10 lg:w-14 lg:h-14 bg-blue-500 text-white rounded-xl lg:rounded-[1.25rem] flex items-center justify-center text-lg lg:text-xl shadow-md shadow-blue-500/20 shrink-0"><i class="fa-solid fa-book-open"></i></div>
+                        <div>
+                            <div class="text-[9px] lg:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 lg:mb-0.5">Semua Kosakata</div>
+                            <div id="statTotalVocab" class="font-black text-xl lg:text-2xl text-gray-900 leading-none">0</div>
+                            <div class="text-[9px] text-gray-400 mt-1 block font-medium">Total kata tersimpan</div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 hover:border-green-200 transition-colors cursor-pointer">
+                        <div class="w-10 h-10 lg:w-14 lg:h-14 bg-emerald-400 text-white rounded-xl lg:rounded-[1.25rem] flex items-center justify-center text-lg lg:text-xl shadow-md shadow-emerald-400/20 shrink-0"><i class="fa-regular fa-circle-check"></i></div>
+                        <div>
+                            <div class="text-[9px] lg:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 lg:mb-0.5">Review Hari Ini</div>
+                            <div id="statReviewToday" class="font-black text-xl lg:text-2xl text-emerald-600 leading-none">0</div>
+                            <div class="text-[9px] text-gray-400 mt-1 block font-medium">Kata untuk di-review</div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 hover:border-purple-200 transition-colors cursor-pointer">
+                        <div class="w-10 h-10 lg:w-14 lg:h-14 bg-purple-500 text-white rounded-xl lg:rounded-[1.25rem] flex items-center justify-center text-lg lg:text-xl shadow-md shadow-purple-500/20 shrink-0"><i class="fa-regular fa-calendar-days"></i></div>
+                        <div>
+                            <div class="text-[9px] lg:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 lg:mb-0.5">Review Mingguan</div>
+                            <div id="statReviewWeek" class="font-black text-xl lg:text-2xl text-gray-900 leading-none">0</div>
+                            <div class="text-[9px] text-gray-400 mt-1 block font-medium">Jadwal minggu ini</div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 hover:border-orange-200 transition-colors cursor-pointer">
+                        <div class="w-10 h-10 lg:w-14 lg:h-14 bg-orange-400 text-white rounded-xl lg:rounded-[1.25rem] flex items-center justify-center text-lg lg:text-xl shadow-md shadow-orange-400/20 shrink-0"><i class="fa-solid fa-bullseye"></i></div>
+                        <div>
+                            <div class="text-[9px] lg:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 lg:mb-0.5">Penguasaan</div>
+                            <div id="statMastery" class="font-black text-xl lg:text-2xl text-gray-900 leading-none">0%</div>
+                            <div id="statMasteryLevel" class="text-[9px] text-gray-400 mt-1 block font-medium">Level -</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAIN TABLE CARD -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
+
+                    <!-- Tabs & Actions Header -->
+                    <div class="flex flex-col xl:flex-row xl:items-center justify-between border-b border-gray-100">
+                        <!-- Horizontal Scroll Tabs dengan Pembungkus Ilusi Scroll -->
+                        <div class="tab-scroll-wrapper relative w-full xl:w-auto overflow-hidden">
+                            <div id="tabContainer" class="flex flex-nowrap overflow-x-auto hide-scrollbar px-2 lg:px-6 w-full xl:w-auto">
+                                <button onclick="setFilter('all')" id="tab-all" class="tab-btn tab-active whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">Semua Vocab</button>
+                                <button onclick="setFilter('today')" id="tab-today" class="tab-btn whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2">Hari Ini <span id="count-today" class="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded-full">0</span></button>
+                                <button onclick="setFilter('yesterday')" id="tab-yesterday" class="tab-btn whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">Review Harian</button>
+                                <button onclick="setFilter('week')" id="tab-week" class="tab-btn whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">Review Mingguan</button>
+                                <button onclick="setFilter('month')" id="tab-month" class="tab-btn whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">Review Bulanan</button>
+                                <button onclick="setFilter('memorized')" id="tab-memorized" class="tab-btn whitespace-nowrap px-4 py-4 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">Sudah Dihafal</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions (Titik Tiga Dropdown) -->
+                        <div class="flex items-center gap-2 px-4 lg:px-6 py-3 xl:py-0 border-t border-gray-50 xl:border-0 w-full xl:w-auto shrink-0 relative">
+                            <div id="loadingIndicator" class="hidden items-center gap-2 text-sm font-bold text-blue-600 shrink-0 mr-2">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                            </div>
+                            
+                            <div class="relative ml-auto xl:ml-2">
+                                <button onclick="toggleActionMenu()" id="actionMenuBtn" class="w-10 h-10 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl flex items-center justify-center transition-all shadow-sm">
+                                    <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+                                </button>
+                        
+                                <!-- Dropdown Menu Actions -->
+                                <div id="actionDropdown" class="hidden absolute right-0 top-12 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 transform origin-top-right transition-all">
+                                    <button onclick="window.location.href='/game?mode=' + currentFilter" class="w-full text-left px-4 py-2.5 text-sm font-bold text-blue-600 hover:bg-blue-50 flex items-center gap-3">
+                                        <i class="fa-solid fa-gamepad w-4 text-center"></i> Game Center
+                                    </button>
+                                    <button onclick="startFlashcard(); toggleActionMenu();" class="w-full text-left px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                                        <i class="fa-solid fa-layer-group w-4 text-center text-indigo-500"></i> Flashcard Mode
+                                    </button>
+                                    <button onclick="openExportModal(); toggleActionMenu();" class="w-full text-left px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                                        <i class="fa-solid fa-file-pdf w-4 text-center text-red-500"></i> Export PDF
+                                    </button>
+                                    <button onclick="openPremiumModal(); toggleActionMenu();" class="w-full text-left px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                                        <i class="fa-solid fa-crown w-4 text-center text-orange-500"></i> Materi Premium
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters Bar -->
+                    <div class="p-4 lg:p-6 pb-2 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                        <div class="md:col-span-3">
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Filter Level</label>
+                            <select id="levelSelectFilter" onchange="changeLevelFilter(this.value)" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
+                                <option value="all">Semua Level</option>
+                                <option value="A1">A1 (Pemula)</option>
+                                <option value="A2">A2 (Dasar)</option>
+                                <option value="B1">B1 (Menengah)</option>
+                                <option value="B2">B2 (Lanjutan)</option>
+                                <option value="C1">C1 (Mahir)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Filter Jenis Kata</label>
+                            <select id="categorySelectFilter" onchange="changeCategoryFilter(this.value)" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
+                                <option value="all">Semua Jenis Kata</option>
+                                <option value="Noun">Noun</option>
+                                <option value="Verb">Verb</option>
+                                <option value="Adjective">Adjective</option>
+                                <option value="Adverb">Adverb</option>
+                                <option value="Pronoun">Pronoun</option>
+                                <option value="Determiner">Determiner</option>
+                                <option value="Interjection">Interjection</option>
+                                <option value="Phrase">Phrase</option>
+                                <option value="Idiom">Idiom</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Search & Accent Selector -->
+                        <div class="md:col-span-6 flex items-center gap-2">
+                            <div class="relative flex-1">
+                                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                                <input type="text" id="searchBar" onkeyup="currentPage=1; updateUI()" placeholder="Cari kata, arti..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium transition-colors">
+                            </div>
+                            <div class="shrink-0">
+                                <select id="accentSelector" class="w-12 h-[44px] px-2 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-xl text-center appearance-none cursor-pointer hover:bg-gray-50 transition-colors shadow-sm" title="Aksen Pengucapan">
+                                    <option value="en-US" title="American">🇺🇸</option>
+                                    <option value="en-GB" title="British">🇬🇧</option>
+                                    <option value="en-AU" title="Australian">🇦🇺</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Table Area injected by JS -->
+                    <div id="vocabListContainer" class="p-4 lg:p-6 pt-2 overflow-x-auto min-h-[400px]"></div>
+
+                    <!-- Pagination Dinamis -->
+                    <div class="px-6 py-4 border-t border-gray-50 flex items-center justify-between mt-auto">
+                        <span id="paginationInfo" class="text-xs font-semibold text-gray-500">Menampilkan 0 dari 0 kata</span>
+                        <div id="paginationControls" class="flex items-center gap-1">
+                            <!-- Injeksi JS Pagination -->
+                        </div>
+                    </div>
+
+                </div> <!-- End Main Table Card -->
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FLOATING ACTION BUTTON & MODAL TAMBAH VOCAB -->
+    <!-- ========================================== -->
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:ml-[130px]">
+        <label for="addVocabModalToggle" class="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg shadow-blue-500/40 cursor-pointer transition-transform hover:scale-105 active:scale-95 border-2 border-white/20">
+            <i class="fa-solid fa-plus text-2xl"></i>
+        </label>
+    </div>
+    
+    <!-- Checkbox Hack untuk toggle modal CSS murni tanpa nambah JS -->
+    <input type="checkbox" id="addVocabModalToggle" class="hidden">
+
+    <!-- The Form Modal (Muncul saat label diklik) -->
+    <div class="add-vocab-overlay fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl p-6 lg:p-8 w-full max-w-md relative shadow-2xl">
+            <!-- Tombol Tutup (Uncheck checkbox) -->
+            <label for="addVocabModalToggle" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors cursor-pointer"><i class="fa-solid fa-times"></i></label>
+            
+            <div class="flex items-center gap-3 mb-6 mt-2">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-plus-circle"></i></div>
+                <div>
+                    <h2 class="text-xl font-black text-gray-800">Tambah Vocab Baru</h2>
+                    <p class="text-xs text-gray-500 mt-0.5 font-medium">AI akan otomatis mencari arti & bentuk kata.</p>
+                </div>
+            </div>
+
+            <!-- FORM ASLI BAWAAN SCRIPT -->
+            <form id="vocabForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">Vocabulary / Kalimat</label>
+                    <input type="text" id="vWord" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all font-semibold" placeholder="Ketik kata bahasa Inggris di sini...">
+                </div>
+                
+                <button type="submit" id="vocabSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-save"></i> Simpan Vocab
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="javascript/dashboard.js"></script>
+
+    <!-- Modal Pilihan Paket Upgrade PRO -->
+    <div id="upgradeModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] hidden p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] max-w-4xl w-full relative shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+            <!-- Header Pattern -->
+            <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 lg:p-8 text-center border-b border-blue-100 relative shrink-0">
+                <button onclick="document.getElementById('upgradeModal').classList.add('hidden')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm transition-colors"><i class="fa-solid fa-times"></i></button>
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-500 text-white w-16 h-16 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="text-3xl font-black text-gray-900 tracking-tight">VocabMaster Premium</h3>
+                <p class="text-gray-500 mt-2 font-medium">Buka semua fitur — belajar bahasa Inggris 10x lebih cepat</p>
+            </div>
+
+            <!-- Body Two Columns -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8 bg-gray-50 hide-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                    
+                    <!-- Left: Plans -->
+                    <div class="space-y-4" id="planSelectionContainer">
+                        <!-- 1 Month -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <input type="radio" name="proPlan" value="1" data-price="19000" data-name="Paket 1 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600" checked>
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 bulan</span>
+                                <span class="font-black text-2xl text-gray-900 block mt-1">Rp 19.000</span>
+                            </div>
+                        </label>
+
+                        <!-- 3 Months -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 14%</div>
+                            <input type="radio" name="proPlan" value="3" data-price="49000" data-name="Paket 3 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">3 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 49.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 57.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 16.333/bulan</span>
+                            </div>
+                        </label>
+
+                        <!-- 6 Months -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 22%</div>
+                            <input type="radio" name="proPlan" value="6" data-price="89000" data-name="Paket 6 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">6 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 89.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 114.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 14.833/bulan</span>
+                            </div>
+                        </label>
+
+                        <!-- 1 Year -->
+                        <label class="relative flex items-center p-5 border-2 border-blue-500 bg-blue-50/50 rounded-2xl cursor-pointer transition-all has-[:checked]:ring-4 has-[:checked]:ring-blue-100 shadow-md">
+                            <div class="absolute -top-3 right-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1 border border-white"><i class="fa-solid fa-star text-yellow-300"></i> Paling Hemat 30%</div>
+                            <input type="radio" name="proPlan" value="12" data-price="159000" data-name="Paket 1 Tahun" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 tahun</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-blue-700">Rp 159.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 228.000</span>
+                                </div>
+                                <span class="text-[11px] text-blue-800 font-bold block mt-1">~ Rp 13.250/bulan</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Right: Benefits -->
+                    <div class="bg-white p-6 lg:p-8 rounded-2xl border border-gray-100 shadow-sm self-start">
+                        <h4 class="font-black text-gray-900 text-lg mb-6 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-sm"><i class="fa-solid fa-bolt"></i></div> Manfaat Premium
+                        </h4>
+                        <ul class="space-y-4 text-sm text-gray-600 font-medium">
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses tak terbatas ke <strong>Grammar Checker</strong> & <strong>Translator AI</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Buka fitur latihan <strong>Listening YouTube</strong> dari video apapun</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Simpan kosakata & catatan <strong>tanpa batas</strong> (hapus limit 150 kata)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses ke puluhan <strong>Materi & PDF Eksklusif</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Dapatkan akses ke <strong>Program Afiliasi</strong> (Komisi tunai 30%)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Export daftar kosakata ke PDF sepuasnya</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-6 bg-white border-t border-gray-100 shrink-0">
+                <button type="button" id="btnProCheckout" onclick="executeProCheckout()" class="w-full max-w-md mx-auto block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-base hover:-translate-y-0.5">
+                    Lanjutkan Pembayaran
+                </button>
+                <p class="text-[10px] text-center text-gray-400 mt-4 font-bold tracking-wide uppercase">Pembayaran aman didukung oleh Midtrans. Berbagai metode tersedia (Gopay, OVO, Dana, dll).</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

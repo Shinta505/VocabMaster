@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saran Komunitas - VocabMaster</title>
+    <link rel="icon" type="image/png" href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+    <div class="flex-1 h-screen overflow-hidden bg-[#f8fafc] flex">
+
+    <aside class="hidden lg:flex flex-col w-[260px] bg-white border-r border-gray-100 h-full fixed left-0 top-0 z-40">
+        <div class="h-20 flex items-center px-6 border-b border-gray-50">
+            <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-8 h-8 object-contain">
+            <h1 class="text-[17px] font-black text-gray-800 ml-3 tracking-tight">VocabMaster <span id="logoStatusBadge" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold align-middle">Free</span></h1>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
+            <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-house w-5 text-center"></i> Beranda
+            </a>
+            <a href="/grammar_checker" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker
+            </a>
+            <a href="/community" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas
+            </a>
+            <a href="/translator" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN
+            </a>
+            <a href="/speaking_naskah" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice
+            </a>
+            <a href="/listening" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice
+            </a>
+            <a href="/affiliate" id="desktopAffiliateBtn" class="hidden items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi
+            </a>
+            <a href="#" onclick="openContactModal()" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us
+            </a>
+        </div>
+
+        <div id="desktopUpgradeCardContainer" class="p-4 mb-4">
+            <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fa-solid fa-crown text-yellow-500 text-lg"></i>
+                    <h4 class="font-bold text-sm text-gray-800">Upgrade ke Premium</h4>
+                </div>
+                <ul class="text-xs text-gray-500 space-y-2 mb-4 font-medium">
+                    <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Akses semua materi</li>
+                    <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Tanpa iklan</li>
+                    <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Fitur premium lainnya</li>
+                </ul>
+                <button onclick="openUpgradeModal()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">
+                    Upgrade Sekarang
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full lg:ml-[260px] relative">
+
+        <header class="h-16 lg:h-20 bg-[#f8fafc] flex items-center justify-between px-4 lg:px-8 shrink-0 z-30 border-b border-gray-100">
+            <div class="flex items-center gap-3 lg:hidden">
+                <button onclick="toggleMobileMenu()" id="mobileMenuBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 shadow-sm shrink-0">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-7 h-7 object-contain shrink-0">
+                <h1 class="hidden sm:block text-lg font-black text-gray-800 tracking-tight truncate">VocabMaster</h1>
+            </div>
+        
+            <div class="flex items-center gap-2 sm:gap-3 ml-auto lg:gap-4">
+                <button id="upgradeProBtn" onclick="openUpgradeModal()" class="flex bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-sm items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity shrink-0">
+                    <i class="fa-solid fa-crown text-yellow-300"></i> Upgrade PRO
+                </button>
+                <button onclick="openProfileModal()" class="flex items-center gap-2 text-sm font-semibold text-gray-700 bg-white pl-2 pr-3 py-1.5 rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors shrink-0">
+                    <div class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-user"></i></div>
+                    <span id="displayUsername" class="hidden sm:block">User</span> <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 ml-1 hidden sm:block"></i>
+                </button>
+                <button id="logoutBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm transition-colors shrink-0" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        
+            <div id="mobileDropdown" class="hidden absolute top-16 left-4 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                <button onclick="window.location.href='/dashboard'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-house w-5 text-center"></i> Beranda</button>
+                <button onclick="window.location.href='/grammar_checker'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker</button>
+                <button onclick="window.location.href='/community'" class="w-full text-left px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 flex items-center gap-3"><i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas</button>
+                <button onclick="window.location.href='/translator'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN</button>
+                <button onclick="window.location.href='/speaking_naskah'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice</button>
+                <button onclick="window.location.href='/listening'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice</button>
+                <button id="mobileAffiliateBtn" onclick="window.location.href='/affiliate'" class="hidden w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 items-center gap-3"><i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi</button>
+                <button onclick="openContactModal(); toggleMobileMenu();" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3 border-t border-gray-100 mt-1 pt-2"><i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto px-4 lg:px-8 py-6 pb-8 hide-scrollbar space-y-6">
+        
+            <div class="w-full bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-3 border-b pb-3 flex items-center gap-2 text-sm lg:text-base">
+                    <i class="fa-solid fa-list-check text-indigo-500"></i> Navigasi Daftar
+                </h3>
+                <ul class="grid grid-cols-2 sm:grid-cols-2 lg:flex lg:flex-row gap-2.5">
+                    <li>
+                        <button onclick="setListFilter('all')" id="btnList-all" class="w-full px-4 py-2.5 rounded-xl font-bold bg-indigo-50 text-indigo-700 transition-all flex items-center justify-center gap-2 text-xs md:text-sm border border-indigo-100 shadow-sm">
+                            <i class="fa-solid fa-globe w-4 text-center"></i> Semua Saran
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="setListFilter('my-posts')" id="btnList-my-posts" class="w-full px-4 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-xs md:text-sm border border-gray-200 shadow-sm">
+                            <i class="fa-solid fa-pen w-4 text-center"></i> Saran Saya
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="setListFilter('saved')" id="btnList-saved" class="w-full px-4 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-xs md:text-sm border border-gray-200 shadow-sm">
+                            <i class="fa-solid fa-bookmark w-4 text-center"></i> Daftar Simpanan
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="setListFilter('completed')" id="btnList-completed" class="w-full px-4 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-xs md:text-sm border border-gray-200 shadow-sm">
+                            <i class="fa-solid fa-check-double w-4 text-center"></i> Sudah Selesai
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="w-full flex flex-col">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+                    <div class="grid grid-cols-2 md:flex md:flex-row gap-2.5 w-full md:w-auto">
+                        <select id="filterCategory" onchange="changeFilter()" class="w-full md:w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700">
+                            <option value="all">Semua Jenis</option>
+                            <option value="Film">Film</option>
+                            <option value="Buku">Buku</option>
+                            <option value="Lagu">Lagu</option>
+                        </select>
+                        <select id="filterLevel" onchange="changeFilter()" class="w-full md:w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700">
+                            <option value="all">Semua Level</option>
+                            <option value="A1">A1 (Pemula)</option>
+                            <option value="A2">A2 (Dasar)</option>
+                            <option value="B1">B1 (Menengah)</option>
+                            <option value="B2">B2 (Lanjutan)</option>
+                            <option value="C1">C1 (Mahir)</option>
+                        </select>
+                        <label id="adultFilterWrapper" class="col-span-2 md:col-span-1 hidden items-center justify-center md:justify-start bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors select-none">
+                            <input type="checkbox" id="filterAdult" onchange="loadCommunityRecommendations()" class="w-4 h-4 text-red-600 bg-white border-gray-300 rounded focus:ring-red-500 cursor-pointer">
+                            <span class="ml-2 text-sm font-bold text-red-600 cursor-pointer">18+</span>
+                        </label>
+                    </div>
+                    <button onclick="openAddRecommendationModal()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2.5 rounded-lg shadow-md shadow-indigo-500/30 transition-colors flex items-center justify-center gap-2 shrink-0">
+                        <i class="fa-solid fa-plus"></i> Tambah Saran
+                    </button>
+                </div>
+        
+                <div id="recommendationListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    </div>
+        
+                <div class="px-6 py-4 bg-white rounded-xl border border-gray-100 shadow-sm flex items-center justify-between mt-6">
+                    <span id="paginationInfo" class="text-xs font-semibold text-gray-500">Menampilkan 0 dari 0 data</span>
+                    <div id="paginationControls" class="flex items-center gap-1"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    
+    <!-- Modal Edit Profil -->
+    <div id="profileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="document.getElementById('profileModal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+            
+            <div class="flex items-center gap-3 mb-6 mt-2">
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-user-pen"></i></div>
+                <h2 class="text-xl font-bold text-gray-800">Edit Profil</h2>
+            </div>
+    
+            <form id="profileForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Pengguna (Unik)</label>
+                    <input type="text" id="profileUsername" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="NamaUnikAnda">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email</label>
+                    <input type="email" id="profileEmail" disabled class="w-full px-4 py-3 border border-gray-200 bg-gray-100 rounded-xl text-sm text-gray-500 font-medium cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tanggal Lahir</label>
+                    <input type="date" id="profileDob" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-gray-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password Baru</label>
+                    <input type="password" id="profilePassword" minlength="8" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="Kosongkan jika tidak diubah">
+                </div>
+                <div id="profileStatusMsg" class="hidden text-sm p-3 rounded-xl border font-medium"></div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 mt-2">Simpan Profil</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Pilihan Paket Upgrade PRO -->
+    <div id="upgradeModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] hidden p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] max-w-4xl w-full relative shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+            <!-- Header Pattern -->
+            <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 lg:p-8 text-center border-b border-blue-100 relative shrink-0">
+                <button onclick="document.getElementById('upgradeModal').classList.add('hidden')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm transition-colors"><i class="fa-solid fa-times"></i></button>
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-500 text-white w-16 h-16 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="text-3xl font-black text-gray-900 tracking-tight">VocabMaster Premium</h3>
+                <p class="text-gray-500 mt-2 font-medium">Buka semua fitur — belajar bahasa Inggris 10x lebih cepat</p>
+            </div>
+
+            <!-- Body Two Columns -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8 bg-gray-50 hide-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                    
+                    <!-- Left: Plans -->
+                    <div class="space-y-4" id="planSelectionContainer">
+                        <!-- 1 Month -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <input type="radio" name="proPlan" value="1" data-price="19000" data-name="Paket 1 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600" checked>
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 bulan</span>
+                                <span class="font-black text-2xl text-gray-900 block mt-1">Rp 19.000</span>
+                            </div>
+                        </label>
+
+                        <!-- 3 Months -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 14%</div>
+                            <input type="radio" name="proPlan" value="3" data-price="49000" data-name="Paket 3 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">3 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 49.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 57.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 16.333/bulan</span>
+                            </div>
+                        </label>
+
+                        <!-- 6 Months -->
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 22%</div>
+                            <input type="radio" name="proPlan" value="6" data-price="89000" data-name="Paket 6 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">6 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 89.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 114.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 14.833/bulan</span>
+                            </div>
+                        </label>
+
+                        <!-- 1 Year -->
+                        <label class="relative flex items-center p-5 border-2 border-blue-500 bg-blue-50/50 rounded-2xl cursor-pointer transition-all has-[:checked]:ring-4 has-[:checked]:ring-blue-100 shadow-md">
+                            <div class="absolute -top-3 right-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1 border border-white"><i class="fa-solid fa-star text-yellow-300"></i> Paling Hemat 30%</div>
+                            <input type="radio" name="proPlan" value="12" data-price="159000" data-name="Paket 1 Tahun" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 tahun</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-blue-700">Rp 159.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 228.000</span>
+                                </div>
+                                <span class="text-[11px] text-blue-800 font-bold block mt-1">~ Rp 13.250/bulan</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Right: Benefits -->
+                    <div class="bg-white p-6 lg:p-8 rounded-2xl border border-gray-100 shadow-sm self-start">
+                        <h4 class="font-black text-gray-900 text-lg mb-6 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-sm"><i class="fa-solid fa-bolt"></i></div> Manfaat Premium
+                        </h4>
+                        <ul class="space-y-4 text-sm text-gray-600 font-medium">
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses tak terbatas ke <strong>Grammar Checker</strong> & <strong>Translator AI</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Buka fitur latihan <strong>Listening YouTube</strong> dari video apapun</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Simpan kosakata & catatan <strong>tanpa batas</strong> (hapus limit 150 kata)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses ke puluhan <strong>Materi & PDF Eksklusif</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Dapatkan akses ke <strong>Program Afiliasi</strong> (Komisi tunai 30%)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Export daftar kosakata ke PDF sepuasnya</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-6 bg-white border-t border-gray-100 shrink-0">
+                <button type="button" id="btnProCheckout" onclick="executeProCheckout()" class="w-full max-w-md mx-auto block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-base hover:-translate-y-0.5">
+                    Lanjutkan Pembayaran
+                </button>
+                <p class="text-[10px] text-center text-gray-400 mt-4 font-bold tracking-wide uppercase">Pembayaran aman didukung oleh Midtrans. Berbagai metode tersedia (Gopay, OVO, Dana, dll).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Simpan Rekomendasi -->
+    <div id="saveRecModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 relative shadow-2xl">
+            <button type="button" onclick="closeSaveModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 mb-1"><i class="fa-solid fa-bookmark text-indigo-600"></i> Simpan ke Daftar Saya</h3>
+            <p id="saveRecTitle" class="text-xs text-gray-500 mb-5 truncate font-medium bg-gray-50 p-2 rounded border border-gray-100"></p>
+
+            <form id="saveRecForm" class="space-y-3">
+                <input type="hidden" id="saveRecId">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Pilih Kelompok:</label>
+                <div class="space-y-2">
+                    <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-indigo-50 transition-colors">
+                        <input type="radio" name="saveStatus" value="plan" class="w-4 h-4 text-indigo-600" required>
+                        <span class="ml-3 text-sm font-bold text-gray-800">Ingin Dilihat/Dibaca</span>
+                    </label>
+                    <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-indigo-50 transition-colors">
+                        <input type="radio" name="saveStatus" value="progress" class="w-4 h-4 text-indigo-600">
+                        <span class="ml-3 text-sm font-bold text-gray-800">Sedang Proses</span>
+                    </label>
+                    <label class="flex items-center p-3 border border-emerald-200 bg-emerald-50/30 rounded-xl cursor-pointer hover:bg-emerald-50 transition-colors">
+                        <input type="radio" name="saveStatus" value="completed" class="w-4 h-4 text-emerald-600">
+                        <span class="ml-3 text-sm font-bold text-emerald-700">Sudah Selesai</span>
+                    </label>
+                </div>
+                <div class="flex justify-between items-center mt-4">
+                    <button type="button" onclick="removeSavedRec()" class="text-xs font-bold text-red-500 hover:text-red-700 underline">Hapus dari Daftar</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-colors shadow-sm">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form Tambah Rekomendasi -->
+    <div id="addRecModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAddModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-share-nodes text-indigo-600"></i> Kirim Saran Media Belajar</h3>
+            
+            <form id="addRecForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+                        <select id="recCategory" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                            <option value="Film">Film</option>
+                            <option value="Buku">Buku</option>
+                            <option value="Lagu">Lagu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Level</label>
+                        <select id="recLevel" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                            <option value="A1">A1</option>
+                            <option value="A2">A2</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="C1">C1</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Judul Konten</label>
+                    <input type="text" id="recTitle" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="Contoh: Harry Potter">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Kreator / Penulis</label>
+                        <input type="text" id="recCreator" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="J.K. Rowling">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Tahun Rilis</label>
+                        <input type="number" id="recYear" required min="1900" max="2030" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="2001">
+                    </div>
+                </div>
+                
+                <button type="button" id="aiClassifyBtn" onclick="autoClassifyContent()" class="w-full bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-2 rounded-lg text-xs border border-purple-200 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Deteksi Level & Batas Usia Otomatis
+                </button>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Nama Platform</label>
+                        <input type="text" id="recAccessPlace" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="Netflix / Spotify">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">URL (Link Akses)</label>
+                        <input type="url" id="recAccessLink" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="https://...">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">URL Gambar / Poster (Opsional)</label>
+                    <input type="url" id="recImage" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50" placeholder="https://...">
+                </div>
+                
+                <div class="mt-3">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Klasifikasi Usia Konten</label>
+                    <select id="recIsAdult" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                        <option value="false">Semua Umur (Aman untuk < 18 Tahun)</option>
+                        <option value="true">18+ (Konten Dewasa)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition-colors mt-2">Kirim ke Komunitas</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form Edit Rekomendasi -->
+    <div id="editRecModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-pen text-blue-600"></i> Edit Saran Komunitas</h3>
+            
+            <form id="editRecForm" class="space-y-4">
+                <input type="hidden" id="editRecId">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+                        <select id="editRecCategory" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                            <option value="Film">Film</option>
+                            <option value="Buku">Buku</option>
+                            <option value="Lagu">Lagu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Level</label>
+                        <select id="editRecLevel" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                            <option value="A1">A1</option>
+                            <option value="A2">A2</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="C1">C1</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Judul Konten</label>
+                    <input type="text" id="editRecTitle" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Kreator / Penulis</label>
+                        <input type="text" id="editRecCreator" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Tahun Rilis</label>
+                        <input type="number" id="editRecYear" required min="1900" max="2030" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                    </div>
+                </div>
+                
+                <button type="button" id="aiClassifyEditBtn" onclick="autoClassifyEditContent()" class="w-full bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-2 rounded-lg text-xs border border-purple-200 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Deteksi Level & Batas Usia Otomatis
+                </button>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Nama Platform</label>
+                        <input type="text" id="editRecAccessPlace" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">URL (Link Akses)</label>
+                        <input type="url" id="editRecAccessLink" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">URL Gambar / Poster (Opsional)</label>
+                    <input type="url" id="editRecImage" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                </div>
+                
+                <div class="mt-3">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Klasifikasi Usia Konten</label>
+                    <select id="editRecIsAdult" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50">
+                        <option value="false">Semua Umur (Aman untuk < 18 Tahun)</option>
+                        <option value="true">18+ (Konten Dewasa)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition-colors mt-2">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Contact Us -->
+    <div id="contactModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeContactModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <div class="space-y-2 bg-white border border-gray-200 p-5 rounded-xl shadow-sm space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Kritik & Saran (Anonim)
+                    </h3>
+                    <form action="https://formsubmit.co/shinta.nur119@gmail.com" method="POST" class="flex flex-col gap-2">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://vocab-app-one-eosin.vercel.app/community">
+                        <input type="text" name="Pesan_Kritik" required placeholder="Tulis masukan untuk kami..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <button type="submit" class="w-full bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                            Kirim Masukan <i class="fa-solid fa-paper-plane ml-1"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="space-y-3 flex items-center gap-3 mb-4 mt-4">
+                <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-xs">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Hubungi Kami</h2>
+                    <p class="text-xs text-gray-500">Punya pertanyaan atau kendala? Hubungi kontak di bawah.</p>
+                </div>
+            </div>
+            <div class="space-y-3 text-sm text-gray-600 mb-6">
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <i class="fa-brands fa-whatsapp text-green-500 text-xl w-6 text-center"></i>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium">WhatsApp</span>
+                        <span class="font-bold text-gray-800">+62 812-3456-789</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <i class="fa-solid fa-envelope text-red-500 text-xl w-6 text-center"></i>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium">Email</span>
+                        <span class="font-bold text-gray-800">vocab@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="closeContactModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-xl text-sm transition-colors">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Modal Form Pelaporan Konten -->
+    <div id="reportModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button type="button" onclick="closeReportModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 mb-2"><i class="fa-solid fa-flag text-red-500"></i> Laporkan Konten</h3>
+            <p class="text-xs text-gray-500 mb-4">Bantu kami menjaga kualitas komunitas dengan melaporkan konten yang tidak sesuai.</p>
+            
+            <form id="reportForm" class="space-y-4">
+                <!-- Hidden Input untuk membawa ID dan Judul konten -->
+                <input type="hidden" id="reportContentId">
+                <input type="hidden" id="reportContentTitle">
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Alasan Utama</label>
+                    <select id="reportReason" required class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-red-500 outline-none">
+                        <option value="">-- Pilih Alasan --</option>
+                        <option value="Spam, Promosi, atau Iklan">Spam, Promosi, atau Iklan</option>
+                        <option value="Konten Tidak Pantas / Melanggar Aturan">Konten Tidak Pantas / Melanggar Aturan</option>
+                        <option value="Informasi Palsu atau Menyesatkan">Informasi Palsu atau Menyesatkan</option>
+                        <option value="Tautan Rusak / Tidak Bisa Diakses">Tautan Rusak / Tidak Bisa Diakses</option>
+                        <option value="Kategorisasi / Level Salah">Kategorisasi / Level Salah</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Penjelasan Detail</label>
+                    <textarea id="reportDetail" required rows="3" class="w-full px-3 py-2 border rounded-lg text-sm bg-gray-50 resize-none focus:ring-2 focus:ring-red-500 outline-none" placeholder="Tuliskan secara spesifik apa yang salah dengan konten ini..."></textarea>
+                </div>
+                
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-sm transition-colors mt-2">Kirim Laporan</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="javascript/community.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success - VocabMaster PRO</title>
+    <link rel="icon" type="image/png" href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center border-t-4 border-emerald-500 relative overflow-hidden">
+        <!-- Ikon Background Transparan -->
+        <div class="absolute -top-6 -right-6 text-emerald-50 opacity-60 text-9xl">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        
+        <!-- Ikon Utama -->
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 relative z-10 shadow-sm">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-gray-800 mb-3 relative z-10">Pendaftaran Berhasil! 🎉</h1>
+        <p class="text-sm text-gray-600 mb-8 relative z-10 leading-relaxed">
+            Pembayaran kamu telah kami terima. Silakan cek <b>email kamu</b> (periksa juga folder <i>Spam/Junk</i> jika tidak ada di kotak masuk utama) untuk melihat detail akun dan link akses aplikasi.
+        </p>
+        
+        <a href="/dashboard" class="block w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-xl transition-colors relative z-10">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Halaman Utama
+        </a>
+    </div>
+</body>
+</html>

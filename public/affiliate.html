@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Afiliasi - VocabMaster</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;">
+    <link rel="icon" type="image/png" href="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        
+         ::-webkit-scrollbar { width: 8px; }
+         ::-webkit-scrollbar-track { background: #f1f1f1; }
+         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen flex flex-col">
+    <div class="flex-1 h-screen overflow-hidden bg-[#f8fafc] flex">
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:flex flex-col w-[260px] bg-white border-r border-gray-100 h-full fixed left-0 top-0 z-40">
+            <div class="h-20 flex items-center px-6 border-b border-gray-50">
+                <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-8 h-8 object-contain">
+                <h1 class="text-[17px] font-black text-gray-800 ml-3 tracking-tight">VocabMaster <span id="logoStatusBadge" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold align-middle">Free</span></h1>
+            </div>
+
+            <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
+                <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-house w-5 text-center"></i> Beranda
+                </a>
+                <a href="/grammar_checker" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker
+                </a>
+                <a href="/community" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas
+                </a>
+                <a href="/translator" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN
+                </a>
+                <a href="/speaking_naskah" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice
+                </a>
+                <a href="/listening" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice
+                </a>
+                <a href="/affiliate" id="desktopAffiliateBtn" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi
+                </a>
+                <a href="#" onclick="openContactModal()" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us
+                </a>
+            </div>
+
+            <div id="desktopUpgradeCardContainer" class="p-4 mb-4">
+                <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-crown text-yellow-500 text-lg"></i>
+                        <h4 class="font-bold text-sm text-gray-800">Upgrade ke Premium</h4>
+                    </div>
+                    <ul class="text-xs text-gray-500 space-y-2 mb-4 font-medium">
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Akses semua materi</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Tanpa iklan</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-green-500"></i> Fitur premium lainnya</li>
+                    </ul>
+                    <button onclick="openUpgradeModal()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">
+                        Upgrade Sekarang
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <main class="flex-1 flex flex-col h-full lg:ml-[260px] relative">
+
+            <!-- Navbar -->
+            <header class="h-16 lg:h-20 bg-[#f8fafc] flex items-center justify-between px-4 lg:px-8 shrink-0 z-30 border-b border-gray-100">
+                <div class="flex items-center gap-3 lg:hidden">
+                    <button onclick="toggleMobileMenu()" id="mobileMenuBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 shadow-sm shrink-0">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <img src="https://sbnzxduuaimpyfoxoaft.supabase.co/storage/v1/object/public/assets/logo.png" alt="Logo" class="w-7 h-7 object-contain shrink-0">
+                    <h1 class="hidden sm:block text-lg font-black text-gray-800 tracking-tight truncate">VocabMaster</h1>
+                </div>
+            
+                <div class="flex items-center gap-2 sm:gap-3 ml-auto lg:gap-4">
+                    <button id="upgradeProBtn" onclick="openUpgradeModal()" class="flex bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-sm items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity shrink-0">
+                        <i class="fa-solid fa-crown text-yellow-300"></i> Upgrade PRO
+                    </button>
+                    <button onclick="openProfileModal()" class="flex items-center gap-2 text-sm font-semibold text-gray-700 bg-white pl-2 pr-3 py-1.5 rounded-full border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors shrink-0">
+                        <div class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-user"></i></div>
+                        <span id="displayUsername" class="hidden sm:block">User</span> <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 ml-1 hidden sm:block"></i>
+                    </button>
+                    <button id="logoutBtn" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm transition-colors shrink-0" title="Logout">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+            
+                <div id="mobileDropdown" class="hidden absolute top-16 left-4 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                    <button onclick="window.location.href='/dashboard'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-house w-5 text-center"></i> Beranda</button>
+                    <button onclick="window.location.href='/grammar_checker'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-pen-to-square w-5 text-center text-indigo-500"></i> Grammar Checker</button>
+                    <button onclick="window.location.href='/community'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-lightbulb w-5 text-center text-purple-500"></i> Saran Komunitas</button>
+                    <button onclick="window.location.href='/translator'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-language w-5 text-center text-emerald-500"></i> Translate ID-EN</button>
+                    <button onclick="window.location.href='/speaking_naskah'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-video w-5 text-center text-orange-500"></i> Speaking Practice</button>
+                    <button onclick="window.location.href='/listening'" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3"><i class="fa-solid fa-headphones w-5 text-center text-rose-500"></i> Listening Practice</button>
+                    <button id="mobileAffiliateBtn" onclick="window.location.href='/affiliate'" class="w-full text-left px-4 py-3 text-sm font-bold text-blue-600 bg-blue-50 flex items-center gap-3"><i class="fa-solid fa-handshake w-5 text-center text-teal-500"></i> Program Afiliasi</button>
+                    <button onclick="openContactModal(); toggleMobileMenu();" class="w-full text-left px-4 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 flex items-center gap-3 border-t border-gray-100 mt-1 pt-2"><i class="fa-solid fa-globe w-5 text-center text-blue-500"></i> Contact Us</button>
+                </div>
+            </header>
+
+            <!-- Main Content: Affiliate Program -->
+            <div class="flex-1 overflow-y-auto px-4 lg:px-8 py-6 pb-8 hide-scrollbar space-y-6">
+                <main class="w-full max-w-2xl mx-auto hidden" id="mainContent">
+                    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-handshake-angle text-green-600"></i> Program Afiliasi
+                        </h2>
+                        <p class="text-sm text-gray-500 mb-6">Bagikan link kamu dan dapatkan komisi tunai <strong>25%</strong> untuk setiap orang yang berlangganan!</p>
+
+                        <!-- Informasi Saldo -->
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-100 border border-green-200 p-5 rounded-xl flex items-center justify-between mb-6 shadow-sm">
+                            <div>
+                                <span class="text-xs text-green-700 font-bold block mb-1">Saldo Aktif Kamu:</span>
+                                <span id="walletBalanceDisplay" class="text-3xl font-black text-green-800">Rp 0</span>
+                            </div>
+                            <div class="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm text-green-500 text-2xl">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                        </div>
+
+                        <!-- Area Link Referral -->
+                        <div class="mb-8 space-y-2">
+                            <label class="block text-sm font-bold text-gray-700">Link Referral Kamu:</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="referralLinkInput" readonly class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none font-medium">
+                                <button onclick="copyReferralLink()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-colors shrink-0 shadow-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-copy"></i> Salin
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Rincian Komisi -->
+                        <div class="mb-8 p-4 bg-amber-50 border border-amber-100 rounded-xl">
+                            <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-3"><i class="fa-solid fa-coins"></i> Rincian Komisi 25%</h4>
+                            <div class="space-y-2 text-sm text-gray-700 font-medium">
+                                <div class="flex justify-between border-b border-amber-200/50 pb-2">
+                                    <span>Paket 1 Bulan</span>
+                                    <span class="text-green-600 font-bold">+ Rp 4.750</span>
+                                </div>
+                                <div class="flex justify-between border-b border-amber-200/50 pb-2">
+                                    <span>Paket 3 Bulan</span>
+                                    <span class="text-green-600 font-bold">+ Rp 12.250</span>
+                                </div>
+                                <div class="flex justify-between border-b border-amber-200/50 pb-2">
+                                    <span>Paket 6 Bulan</span>
+                                    <span class="text-green-600 font-bold">+ Rp 22.250</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Paket 1 Tahun <span class="text-[10px] bg-amber-200 text-amber-800 px-1.5 rounded ml-1">Favorit</span></span>
+                                    <span class="text-green-600 font-bold">+ Rp 39.750</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Penarikan -->
+                        <div class="border-t border-gray-100 pt-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-building-columns text-blue-500 mr-2"></i> Tarik Saldo (Minimal Rp 15.000)</h3>
+
+                            <form id="withdrawalForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Pilih Bank / E-Wallet</label>
+                                    <select id="wdBank" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-green-500 outline-none font-medium">
+                                        <option value="">-- Pilih Tujuan --</option>
+                                        <option value="DANA">DANA</option>
+                                        <option value="OVO">OVO</option>
+                                        <option value="GOPAY">GoPay</option>
+                                        <option value="SHOPEEPAY">ShopeePay</option>
+                                        <option disabled>────────────────────</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Nomor Rekening / No. HP E-Wallet</label>
+                                    <input type="text" id="wdAccount" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-green-500 outline-none" placeholder="Contoh: 081234567890">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Nama Pemilik Rekening</label>
+                                    <input type="text" id="wdName" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-green-500 outline-none" placeholder="Nama sesuai buku tabungan">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Nominal Penarikan</label>
+                                    <input type="number" id="wdAmount" min="15000" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-green-500 outline-none" placeholder="Contoh: 20000">
+                                </div>
+
+                                <div id="wdErrorMsg" class="hidden text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200"></div>
+
+                                <button type="submit" id="wdSubmitBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl text-sm transition-colors mt-4 shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Ajukan Penarikan
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </main>
+    </div>
+
+    <!-- Flash Message Box -->
+    <div id="messageBox" class="hidden fixed top-4 right-4 px-4 py-3 rounded z-[100] flex items-center gap-3 shadow-md" role="alert">
+        <span id="messageBoxText" class="text-sm font-medium"></span>
+    </div>
+
+    <!-- Modal Edit Profil -->
+    <div id="profileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="document.getElementById('profileModal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-times"></i></button>
+            
+            <div class="flex items-center gap-3 mb-6 mt-2">
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-user-pen"></i></div>
+                <h2 class="text-xl font-bold text-gray-800">Edit Profil</h2>
+            </div>
+    
+            <form id="profileForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Pengguna (Unik)</label>
+                    <input type="text" id="profileUsername" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="NamaUnikAnda">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email</label>
+                    <input type="email" id="profileEmail" disabled class="w-full px-4 py-3 border border-gray-200 bg-gray-100 rounded-xl text-sm text-gray-500 font-medium cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tanggal Lahir</label>
+                    <input type="date" id="profileDob" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-gray-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password Baru</label>
+                    <input type="password" id="profilePassword" minlength="8" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" placeholder="Kosongkan jika tidak diubah">
+                </div>
+                <div id="profileStatusMsg" class="hidden text-sm p-3 rounded-xl border font-medium"></div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-blue-500/20 mt-2">Simpan Profil</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Pilihan Paket Upgrade PRO -->
+    <div id="upgradeModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] hidden p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] max-w-4xl w-full relative shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+            <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 lg:p-8 text-center border-b border-blue-100 relative shrink-0">
+                <button onclick="document.getElementById('upgradeModal').classList.add('hidden')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm transition-colors"><i class="fa-solid fa-times"></i></button>
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-500 text-white w-16 h-16 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="text-3xl font-black text-gray-900 tracking-tight">VocabMaster Premium</h3>
+                <p class="text-gray-500 mt-2 font-medium">Buka semua fitur — belajar bahasa Inggris 10x lebih cepat</p>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8 bg-gray-50 hide-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                    <div class="space-y-4" id="planSelectionContainer">
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <input type="radio" name="proPlan" value="1" data-price="19000" data-name="Paket 1 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600" checked>
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 bulan</span>
+                                <span class="font-black text-2xl text-gray-900 block mt-1">Rp 19.000</span>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 14%</div>
+                            <input type="radio" name="proPlan" value="3" data-price="49000" data-name="Paket 3 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">3 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 49.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 57.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 16.333/bulan</span>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-center p-5 border-2 border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 shadow-sm">
+                            <div class="absolute -top-3 right-5 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white">Hemat 22%</div>
+                            <input type="radio" name="proPlan" value="6" data-price="89000" data-name="Paket 6 Bulan" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">6 bulan</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-gray-900">Rp 89.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 114.000</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 block mt-1 font-medium">~ Rp 14.833/bulan</span>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-center p-5 border-2 border-blue-500 bg-blue-50/50 rounded-2xl cursor-pointer transition-all has-[:checked]:ring-4 has-[:checked]:ring-blue-100 shadow-md">
+                            <div class="absolute -top-3 right-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1 border border-white"><i class="fa-solid fa-star text-yellow-300"></i> Paling Hemat 30%</div>
+                            <input type="radio" name="proPlan" value="12" data-price="159000" data-name="Paket 1 Tahun" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-600">
+                            <div class="ml-4 flex-1">
+                                <span class="font-bold text-gray-800 block">1 tahun</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="font-black text-2xl text-blue-700">Rp 159.000</span>
+                                    <span class="text-xs text-gray-400 line-through font-semibold">Rp 228.000</span>
+                                </div>
+                                <span class="text-[11px] text-blue-800 font-bold block mt-1">~ Rp 13.250/bulan</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="bg-white p-6 lg:p-8 rounded-2xl border border-gray-100 shadow-sm self-start">
+                        <h4 class="font-black text-gray-900 text-lg mb-6 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-sm"><i class="fa-solid fa-bolt"></i></div> Manfaat Premium
+                        </h4>
+                        <ul class="space-y-4 text-sm text-gray-600 font-medium">
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses tak terbatas ke <strong>Grammar Checker</strong> & <strong>Translator AI</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Buka fitur latihan <strong>Listening YouTube</strong> dari video apapun</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Simpan kosakata & catatan <strong>tanpa batas</strong> (hapus limit 150 kata)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Akses ke puluhan <strong>Materi & PDF Eksklusif</strong></span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Dapatkan akses ke <strong>Program Afiliasi</strong> (Komisi tunai 25%)</span>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <i class="fa-solid fa-circle-check text-blue-500 mt-1 text-base"></i>
+                                <span>Export daftar kosakata ke PDF sepuasnya</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white border-t border-gray-100 shrink-0">
+                <button type="button" id="btnProCheckout" onclick="executeProCheckout()" class="w-full max-w-md mx-auto block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-base hover:-translate-y-0.5">
+                    Lanjutkan Pembayaran
+                </button>
+                <p class="text-[10px] text-center text-gray-400 mt-4 font-bold tracking-wide uppercase">Pembayaran aman didukung oleh Midtrans. Berbagai metode tersedia (Gopay, OVO, Dana, dll).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Contact Us -->
+    <div id="contactModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeContactModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            <div class="space-y-2 bg-white border border-gray-200 p-5 rounded-xl shadow-sm space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Kritik & Saran (Anonim)
+                    </h3>
+                    <form action="https://formsubmit.co/shinta.nur119@gmail.com" method="POST" class="flex flex-col gap-2">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://vocab-app-one-eosin.vercel.app/affiliate">
+                        <input type="text" name="Pesan_Kritik" required placeholder="Tulis masukan untuk kami..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <button type="submit" class="w-full bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                            Kirim Masukan <i class="fa-solid fa-paper-plane ml-1"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="space-y-3 flex items-center gap-3 mb-4 mt-4">
+                <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-xs">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Hubungi Kami</h2>
+                    <p class="text-xs text-gray-500">Punya pertanyaan atau kendala? Hubungi kontak di bawah.</p>
+                </div>
+            </div>
+            <div class="space-y-3 text-sm text-gray-600 mb-6">
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <i class="fa-brands fa-whatsapp text-green-500 text-xl w-6 text-center"></i>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium">WhatsApp</span>
+                        <span class="font-bold text-gray-800">+62 812-3456-789</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <i class="fa-solid fa-envelope text-red-500 text-xl w-6 text-center"></i>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium">Email</span>
+                        <span class="font-bold text-gray-800">vocab@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="closeContactModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-xl text-sm transition-colors">Tutup</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="javascript/affiliate.js"></script>
+</body>
+</html>
