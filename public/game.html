@@ -11,54 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase SDK untuk integrasi Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap');
-        
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f0f9ff; /* bg-sky-50 */
-            overscroll-behavior-y: none;
-        }
-
-        /* Utilitas Scrollbar */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Animasi Kustom untuk Game */
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(0); opacity: 0; }
-        }
-        .animate-pop { animation: pop 0.3s ease-out forwards; }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-        }
-        .animate-shake { animation: shake 0.4s ease-in-out; }
-
-        /* 3D Flip Card (Game Memori & Flashcard) */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-
-        /* Animasi Jatuh (Meteor & Hujan Kata) */
-        .falling-object {
-            position: absolute;
-            transition: top 0.1s linear;
-        }
-
-        /* Keyboard Virtual */
-        .key-btn {
-            transition: all 0.1s;
-        }
-        .key-btn:active { transform: scale(0.9); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="w-full h-screen overflow-hidden text-slate-800 flex flex-col relative">
 
