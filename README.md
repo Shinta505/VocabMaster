@@ -165,6 +165,9 @@ Menggunakan **Nodemailer** untuk kebutuhan pengiriman email dari aplikasi.
 
 <img width="1366" height="686" alt="image" src="https://github.com/user-attachments/assets/f7a15722-5ccf-4657-be1e-8e87c5afb0c7" />
 
+### Translate ID-EN
+
+<img width="1366" height="682" alt="image" src="https://github.com/user-attachments/assets/1ad271bb-a31c-457c-9f37-17f9b09cb782" />
 
 ### ✍️ Grammar Checker
 
