@@ -151,25 +151,44 @@ Menggunakan **Nodemailer** untuk kebutuhan pengiriman email dari aplikasi.
 
 ### 📊 Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+<img width="1366" height="684" alt="image" src="https://github.com/user-attachments/assets/c79ccb5b-2377-4da9-8d3a-02c1bd8ddfae" />
 
 ### 📚 Vocabulary
 
-![Vocabulary](screenshots/vocabulary.png)
+<img width="1366" height="682" alt="image" src="https://github.com/user-attachments/assets/b231a063-361f-4c11-a880-522d0118c42a" />
 
 ### 🎮 Vocabulary Game
 
-![Vocabulary Game](screenshots/game.png)
+<img width="1366" height="682" alt="image" src="https://github.com/user-attachments/assets/0912e196-8f6f-4b27-bc05-559c24e51e45" />
+
+<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/632148b2-85f1-453b-853b-0e1d8a434208" />
 
 ### 🎧 Listening
 
-![Listening](screenshots/listening.png)
+<img width="1366" height="682" alt="image" src="https://github.com/user-attachments/assets/9ace8c2c-84db-49f9-bfee-5626d604a1c5" />
+
+<img width="1366" height="686" alt="image" src="https://github.com/user-attachments/assets/f7a15722-5ccf-4657-be1e-8e87c5afb0c7" />
+
 
 ### ✍️ Grammar Checker
 
-![Grammar Checker](screenshots/grammar-checker.png)
+<img width="1366" height="687" alt="image" src="https://github.com/user-attachments/assets/1a449d65-a017-46ef-8a17-191af4bc0b33" />
 
-> **Note:** Letakkan screenshot project di folder `screenshots/` pada repository agar gambar dapat ditampilkan di README.
+### Saran Komunitas
+
+<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/61f4036d-8731-4eae-8f0e-fb9812105b01" />
+
+### Speaking Practice
+
+<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/f9fea945-c801-418d-8892-867197843eeb" />
+
+### Affiliate
+
+<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/1267603b-f723-47bb-859c-3a6e2c26ffbd" />
+
+### Contact Us
+
+<img width="1366" height="682" alt="image" src="https://github.com/user-attachments/assets/d27e1bd0-5e41-4d33-ab17-1f420d725d77" />
 
 ---
 
