@@ -145,10 +145,6 @@ Menggunakan **Nodemailer** untuk kebutuhan pengiriman email dari aplikasi.
 
 ## 📸 Screenshots
 
-### 🏠 Landing Page
-
-![Landing Page](screenshots/landing-page.png)
-
 ### 📊 Dashboard
 
 <img width="1366" height="684" alt="image" src="https://github.com/user-attachments/assets/c79ccb5b-2377-4da9-8d3a-02c1bd8ddfae" />
