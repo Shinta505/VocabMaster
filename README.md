@@ -2,7 +2,7 @@
 
 > Platform pembelajaran kosakata Bahasa Inggris berbasis AI yang dirancang untuk membantu pengguna belajar, menghafal, dan memahami kosakata dengan cara yang lebih cepat, interaktif, dan terstruktur.
 
-🔗 **Live Demo:** [https://vocab-app-one-eosin.vercel.app/](https://vocabmaster-ashen.vercel.app/)
+🔗 **Live Demo:** https://vocabmaster-ashen.vercel.app/
 
 ---
 
